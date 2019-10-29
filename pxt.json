@@ -4,15 +4,17 @@
     "description": "",
     "dependencies": {
         "core": "*",
-        "radio": "*"
+        "radio": "*",
+        "TM1637": "github:makecode-extensions/tm1637#c80d9a8af17698911a8880d0354eaa778ff737f1"
     },
     "files": [
         "README.md",
-        "main.ts"
+        "main.ts",
+        "grans-wibox-sensors.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "public": false,
-    "additionalFilePaths": []
+    "preferredEditor": "tsprj"
 }
