@@ -37,7 +37,7 @@ namespace thales_iot {
      * @param p_greenPin the pin which the green leg of the LED is attached to, eg: DigitalPin.P1
      * @param p_bluePin the pin which the blue leg of the LED is attached to, eg: DigitalPin.P2
      */
-    //%block color=#6633cc
+    //%block="startRGBLED  red $p_redPin green $p_greenPin blue $p_bluePin" color=#6633cc
     export function startRgbLed(p_redPin: DigitalPin, p_greenPin: DigitalPin, p_bluePin: DigitalPin) {
         redPin = p_redPin;
         greenPin = p_greenPin;
@@ -61,7 +61,7 @@ namespace thales_iot {
      * Makes the RGB LED turn to the colour you select
      * @param colour the colour you wish your LED to shine, eg: Colours.Red
      */
-    //%block color=#04b7cf
+    //%block="Make the RGB LED turn $colour" color=#04b7cf
     export function turnOnRgbLed(colour: Colours) {
         switch (colour) {
             case Colours.Off:
@@ -114,7 +114,7 @@ namespace thales_iot {
      * @param clock the pin on the microbit which the clock lead of the seven segment display is attached to, eg: DigitalPin.P0
      * @param DIO the pin on the microbit which the digital input/output (DIO) lead of the seven segment display is attached to, eg: DigitalPin.P1
      */
-    //%block color=#6633cc
+    //%block="start seven segment display clock $clock DIO $DIO" color=#6633cc
     export function startSevenSegment(clock: DigitalPin, DIO: DigitalPin) {
         sevenSeg = TM1637.create(clock, DIO, 7, 4);
         turnOnSevenSegment();
@@ -152,7 +152,7 @@ namespace thales_iot {
      * Displays a number on the Seven Segment Display
      * @param value the number you want to display on the seven segment, eg: 5
      */
-    //%block color=#04b7cf
+    //%block="Show $value On Seven Segment " color=#04b7cf
     export function showNumberOnSevenSegment(value: number) {
         if (sevenSeg == null) return;
         sevenSeg.showNumber(value);
@@ -164,7 +164,7 @@ namespace thales_iot {
      * @param minValue the lowest number you want the potentiometer to read, eg: 1
      * @param maxValue the highest number you want the potentiometer to read, eg: 10
      */
-    //%block color=#a2c841
+    //%block="read the potentiometer at $pin with min value $minValue and max value $maxValue" color=#a2c841
     export function readPotentiometer(pin: AnalogPin, minValue: number, maxValue: number): number {
         return Math.map(pins.analogReadPin(pin), 0, 1023, minValue, maxValue);
     }
@@ -181,7 +181,7 @@ namespace thales_iot {
      * @param analogPin the pin on the microbit which the analog lead of the smoke sensor is attached to, eg: AnalogPin.P1
      * @param threshold the number where the smoke sensor will detect the environment as being smokey - a value between 1-1023, eg: 600
      */
-    //%block color=#6633cc
+    //%block="start smoke sensor digital pin $digitalPin analog pin %analogPin threshold $threshold" color=#6633cc
     export function startSmokeSensor(digitalPin: DigitalPin, analogPin: AnalogPin, threshold: number) {
         smokeDigitalPin = digitalPin;
         smokeAnalogPin = analogPin;
@@ -191,7 +191,7 @@ namespace thales_iot {
      * Sets the threshold of the smoke sensor
      * @param threshold the number where the smoke sensor will detect the environment as being smokey - a value between 1-1023, eg: 600
      */
-    //%block color=#6633cc
+    //%block="set smoke sensor threshold $threshold" color=#6633cc
     export function setSmokeSensorThreshold(threshold: number) {
         smokeThreshold = threshold;
     }
@@ -228,7 +228,7 @@ namespace thales_iot {
      * @param analogPin the pin on the microbit which the analog lead of the sound sound is attached to, eg: AnalogPin.P1
      * @param threshold the number where the sound sensor will detect the environment as being noisy - a value between 1-1023, eg: 600
      */
-    //%block color=#6633cc
+     //%block="start sound sensor digital pin $digitalPin analog Pin %analogPin threshold $threshold" color=#6633cc
     export function startSoundSensor(digitalPin: DigitalPin, analogPin: AnalogPin, threshold: number) {
         soundDigitalPin = digitalPin;
         soundAnalogPin = analogPin;
@@ -238,7 +238,7 @@ namespace thales_iot {
      * Sets the threshold of the sound sensor
      * @param threshold the number where the sound sensor will detect the environment as being smokey - a value between 1-1023, eg: 600
      */
-    //%block color=#6633cc
+    //%block="set sound sensor threshold $threshold" color=#6633cc
     export function setSoundSensorThreshold(threshold: number) {
         soundThreshold = threshold;
     }
