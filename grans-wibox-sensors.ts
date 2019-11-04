@@ -24,53 +24,20 @@ enum Colours {
 /**
  * Custom blocks
  */
-//% weight=100 color=#0fbc11 icon=""
+//% weight=150 color=#6633cc icon=""
 namespace thales_iot {
-    /**
-     * TODO: describe your function here
-     * @param n describe parameter here, eg: 5
-     * @param s describe parameter here, eg: "fun this stuff"
-     * @param e describe parameter here
-     */
-    //% block
-    export function test(n: number, s: string, e: MyEnum): void {
-        // Add code here
-        let temp = input.temperature();
-        //basic.showNumber(temp);
-        if (e == MyEnum.One) {
-            basic.showNumber(temp);
-        }
-        else {
-            basic.showNumber(rip());
-
-        }
-        //input.temperature();
-    }
-
-    //%block
-    export function pinoutFunction(pin: AnalogPin): void {
-        let inputData = pins.analogReadPin(pin);
-        inputData = Math.map(inputData, 0, 1023, 0, 5);
-        basic.showNumber(inputData);
-    }
-    //%block
-    export function lightLED(pin: DigitalPin, value: number) {
-        pins.digitalWritePin(pin, value);
-    }
-
-    //%block
-    export function lightRGBLED(redPin: DigitalPin, greenPin: DigitalPin, bluePin: DigitalPin, redValue: number, greenValue: number, blueValue: number) {
-        lightLED(redPin, redValue);
-        lightLED(greenPin, greenValue);
-        lightLED(bluePin, blueValue);
-    }
-
     //rgb pins
     let redPin = DigitalPin.P0;
     let greenPin = DigitalPin.P1;
     let bluePin = DigitalPin.P2;
 
-    //%block
+    /**
+     * Sets the pins of the RGB LED so you can turn it on - The LED will flash white for half a second if wired correctly
+     * @param p_redPin the pin which the red leg of the LED is attached to, eg: DigitalPin.P0
+     * @param p_greenPin the pin which the green leg of the LED is attached to, eg: DigitalPin.P1
+     * @param p_bluePin the pin which the blue leg of the LED is attached to, eg: DigitalPin.P2
+     */
+    //%block color=#6633cc
     export function startRgbLed(p_redPin: DigitalPin, p_greenPin: DigitalPin, p_bluePin: DigitalPin) {
         redPin = p_redPin;
         greenPin = p_greenPin;
@@ -78,15 +45,23 @@ namespace thales_iot {
         pins.digitalWritePin(redPin, 1);
         pins.digitalWritePin(greenPin, 1);
         pins.digitalWritePin(bluePin, 1);
-        basic.pause(300);
+        basic.pause(500);
+        pins.digitalWritePin(redPin, 0);
+        pins.digitalWritePin(greenPin, 0);
+        pins.digitalWritePin(bluePin, 0);
     }
+    //helper function to light the leds
     function setLed(redValue: number, greenValue: number, blueValue: number) {
         pins.digitalWritePin(redPin, redValue);
-        pins.digitalWritePin(greenValue, greenValue);
-        pins.digitalWritePin(blueValue, blueValue);
+        pins.digitalWritePin(greenPin, greenValue);
+        pins.digitalWritePin(bluePin, blueValue);
     }
 
-    //%block
+    /**
+     * Makes the RGB LED turn to the colour you select
+     * @param colour the colour you wish your LED to shine, eg: Colours.Red
+     */
+    //%block color=#04b7cf
     export function turnOnRgbLed(colour: Colours) {
         switch (colour) {
             case Colours.Off:
@@ -132,28 +107,23 @@ namespace thales_iot {
         }
     }
 
-    /**
-     * TODO: describe your function here
-     * @param value describe value here, eg: 5
-     */
-    //% block
-    export function fib(value: number): number {
-        return value <= 1 ? value : fib(value - 1) + fib(value - 2);
-    }
-
-    //%block
-    export function rip(): number {
-        return 69;
-    }
-
     let sevenSeg: TM1637.TM1637LEDs = null;
     let sevenSegNum = 0;
-    //%block
+    /**
+     * Sets the pins of the seven segment display so you can display numbers to it - The seven segement display will flash the number 8 for half a second then turn off if wired correctly
+     * @param clock the pin on the microbit which the clock lead of the seven segment display is attached to, eg: DigitalPin.P0
+     * @param DIO the pin on the microbit which the digital input/output (DIO) lead of the seven segment display is attached to, eg: DigitalPin.P1
+     */
+    //%block color=#6633cc
     export function startSevenSegment(clock: DigitalPin, DIO: DigitalPin) {
         sevenSeg = TM1637.create(clock, DIO, 7, 4);
+        turnOnSevenSegment();
+        showNumberOnSevenSegment(8);
+        basic.pause(500);
+        turnOffSevenSegment();
     }
-    //%block
-    export function setSevenSegDisplay(value: boolean) {
+    //helper function
+    function setSevenSegDisplay(value: boolean) {
         if (sevenSeg != null) {
             if (value) {
                 sevenSeg.on();
@@ -164,22 +134,39 @@ namespace thales_iot {
         }
     }
 
-    //%block
+    /**
+     * Turns on the Seven Segment Display
+     */
+    //%block color=#04b7cf
     export function turnOnSevenSegment() {
         setSevenSegDisplay(true);
     }
-    //%block
+    /**
+     * Turns off the Seven Segment Display
+     */
+    //%block color=#04b7cf
     export function turnOffSevenSegment() {
         setSevenSegDisplay(false);
     }
-    //%block
+    /**
+     * Displays a number on the Seven Segment Display
+     * @param value the number you want to display on the seven segment, eg: 5
+     */
+    //%block color=#04b7cf
     export function showNumberOnSevenSegment(value: number) {
         if (sevenSeg == null) return;
         sevenSeg.showNumber(value);
     }
-    //%block 
-    export function readPot(pin: AnalogPin): number {
-        return pins.analogReadPin(pin);
+
+    /**
+     * Reads the potentiometer and returns a value between the min value and the max value
+     * @param analogPin the pin on the microbit which the potentiometer lead of the smoke sensor is attached to, eg: AnalogPin.P1
+     * @param minValue the lowest number you want the potentiometer to read, eg: 1
+     * @param maxValue the highest number you want the potentiometer to read, eg: 10
+     */
+    //%block color=#a2c841
+    export function readPotentiometer(pin: AnalogPin, minValue: number, maxValue: number): number {
+        return Math.map(pins.analogReadPin(pin), 0, 1023, minValue, maxValue);
     }
 
 
@@ -188,25 +175,44 @@ namespace thales_iot {
     let smokeAnalogPin = AnalogPin.P1;
     let smokeThreshold = 500;
 
-    //%block
+    /**
+     * Sets the pins of the smoke sensor so you can detect smoke
+     * @param digitalPin the pin on the microbit which the digital lead of the smoke sensor is attached to, eg: DigitalPin.P0
+     * @param analogPin the pin on the microbit which the analog lead of the smoke sensor is attached to, eg: AnalogPin.P1
+     * @param threshold the number where the smoke sensor will detect the environment as being smokey - a value between 1-1023, eg: 600
+     */
+    //%block color=#6633cc
     export function startSmokeSensor(digitalPin: DigitalPin, analogPin: AnalogPin, threshold: number) {
         smokeDigitalPin = digitalPin;
         smokeAnalogPin = analogPin;
         smokeThreshold = threshold;
     }
-    //%block
+    /**
+     * Sets the threshold of the smoke sensor
+     * @param threshold the number where the smoke sensor will detect the environment as being smokey - a value between 1-1023, eg: 600
+     */
+    //%block color=#6633cc
     export function setSmokeSensorThreshold(threshold: number) {
         smokeThreshold = threshold;
     }
-    //%block
-    export function readSmokeSensorAnalogValue() {
+    /**
+     * Returns the smoke sensor analog value - a value between 1-1023, eg: 600
+     */
+    //%block color=#a2c841
+    export function readSmokeSensorAnalogValue(): number {
         return pins.analogReadPin(smokeAnalogPin);
     }
-    //%block
-    export function readSmokeSensorDigitalValue() {
+    /**
+     * Returns the smoke sensor digital value - a value between 0-1, eg: 1
+     */
+    //%block color=#a2c841
+    export function readSmokeSensorDigitalValue(): number {
         return pins.digitalReadPin(smokeDigitalPin);
     }
-    //%block
+    /**
+     * Returns true if the smoke sensor has detected smoke higher than the threshold otherwise returns false
+     */
+    //%block color=#a2c841
     export function hasDetecedSmoke(): boolean {
         return readSmokeSensorAnalogValue() >= smokeThreshold;
     }
@@ -216,26 +222,45 @@ namespace thales_iot {
     let soundAnalogPin = AnalogPin.P1;
     let soundThreshold = 500;
 
-    //%block
+    /**
+     * Sets the pins of the sound sensor so you can detect sound
+     * @param digitalPin the pin on the microbit which the digital lead of the sound sensor is attached to, eg: DigitalPin.P0
+     * @param analogPin the pin on the microbit which the analog lead of the sound sound is attached to, eg: AnalogPin.P1
+     * @param threshold the number where the sound sensor will detect the environment as being noisy - a value between 1-1023, eg: 600
+     */
+    //%block color=#6633cc
     export function startSoundSensor(digitalPin: DigitalPin, analogPin: AnalogPin, threshold: number) {
         soundDigitalPin = digitalPin;
         soundAnalogPin = analogPin;
         soundThreshold = threshold;
     }
-    //%block
+    /**
+     * Sets the threshold of the sound sensor
+     * @param threshold the number where the sound sensor will detect the environment as being smokey - a value between 1-1023, eg: 600
+     */
+    //%block color=#6633cc
     export function setSoundSensorThreshold(threshold: number) {
         soundThreshold = threshold;
     }
-    //%block
+    /**
+     * Returns the sound sensor analog value - a value between 1-1023, eg: 600
+     */
+    //%block color=#a2c841
     export function readSoundSensorAnalogValue() {
         return pins.analogReadPin(soundAnalogPin);
     }
-    //%block
+    /**
+     * Returns the sound sensor digital value - a value between 0-1, eg: 1
+     */
+    //%block color=#a2c841
     export function readSoundSensorDigitalValue() {
         return pins.digitalReadPin(soundDigitalPin);
     }
 
-    //%block
+    /**
+     * Returns true if the sound sensor has detected smoke higher than the threshold otherwise returns false
+     */
+    //%block color=#a2c841
     export function hasDetecedSound(): boolean {
         return readSmokeSensorAnalogValue() >= soundThreshold;
     }
